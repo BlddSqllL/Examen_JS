@@ -1,9 +1,28 @@
 body {
     background-color: #777;
+    display: flex;
+    justify-content: center;
 }
 
-#container {
-    color: aliceblue;
+.container {
+    text-align: center;
+    align-items: center;
     background-color: #333;
+    color: white;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
 
+.input-field , .result-field {
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+}
+
+button { 
+    margin: 10px;
 }
