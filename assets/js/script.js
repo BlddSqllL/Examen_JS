@@ -28,7 +28,8 @@ document.getElementById('buscar').addEventListener('click', async function() {
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
+                      min: 900,
+                      max: 1000
                     }
                 }
             }
