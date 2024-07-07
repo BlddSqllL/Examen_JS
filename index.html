@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Conversor de monedas Nacional</h1>
+        <div class="input-field">
+            <label for="pesos">Pesos CLP:</label>
+            <input type="number" id="pesos" name="pesos">
+        </div>
+        <div class="input-field">
+            <label for="currency">Moneda a convertir:</label>
+            <select id="currency" name="currency">
+                <option value="dolar">Dolar</option>
+                <option value="euro">Euro</option>
+            </select>
+        </div>
+        <button id="buscar">Buscar</button>
+        <div class="result-field">
+            Resultado: <span id="result"></span>
+        </div>
+        <canvas id="myChart"></canvas>
+    </div>
+    <script>
+        document.getElementById('buscar').addEventListener('click', async function() {
+            try {
+                var pesos = document.getElementById('pesos').value;
+                var currency = document.getElementById('currency').value;
+                var response = await fetch('https://mindicador.cl/api/' + currency);
+                var data = await response.json();
+                var result = pesos / data.serie[0].valor;
+                document.getElementById('result').textContent = result.toFixed(2);
+
+                var lastFiveDaysData = data.serie.slice(0, 5);
+                var dates = lastFiveDaysData.map(item => new Date(item.fecha).toLocaleDateString());
+                var values = lastFiveDaysData.map(item => item.valor);
+
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                            label: 'Valor de la moneda en los últimos 5 días',
+                            data: values,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
